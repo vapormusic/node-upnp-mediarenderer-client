@@ -256,6 +256,7 @@ function buildMetadata(metadata) {
   didl.set('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
   didl.set('xmlns:upnp', 'urn:schemas-upnp-org:metadata-1-0/upnp/');
   didl.set('xmlns:sec', 'http://www.sec.co.kr/');
+  didl.set('xmlns:dlna, "urn:schemas-dlna-org:device-1-0");
 
   var item = et.SubElement(didl, 'item');
   item.set('id', 0);
