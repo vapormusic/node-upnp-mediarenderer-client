@@ -309,9 +309,9 @@ function buildMetadata(metadata) {
     res.set('protocolInfo', metadata.protocolInfo);
     res.set('size','4294967295') ;
     res.set('bitrate','176400') ;
-    res.set('sampleFrequency',"44100") ;
-    res.set('bitsPerSample',"16");
-    res.set('nrAudioChannels',"2");
+    res.set('sampleFrequency','44100');
+    res.set('bitsPerSample','16');
+    res.set('nrAudioChannels','2');
     res.text = metadata.url;
   }
 
