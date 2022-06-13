@@ -251,16 +251,24 @@ function parseTime(time) {
 
 
 function buildMetadata(metadata) {
+//   <?xml version="1.0" encoding="utf-8" standalone="yes"?>
+// <s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+// <s:Body>
+// <u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID>
+// <CurrentURI>http://192.168.100.7:34717/AirMusic.WAV</CurrentURI>
+// <CurrentURIMetaData>&lt;DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:sec="http://www.sec.co.kr/"&gt;&lt;item id="0" parentID="0" restricted="1"&gt;&lt;dc:title&gt;Live Audio&lt;/dc:title&gt;&lt;dc:creator&gt;AirMusic Samsung SM-A736B&lt;/dc:creator&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;upnp:album&gt;AirMusic Samsung SM-A736B&lt;/upnp:album&gt;&lt;upnp:artist role="Performer"&gt;AirMusic Samsung SM-A736B&lt;/upnp:artist&gt;&lt;upnp:albumArtURI&gt;http://192.168.100.7:34717/AirMusic.jpeg&lt;/upnp:albumArtURI&gt;&lt;res protocolInfo="http-get:*:audio/wav:DLNA.ORG_PN=WAV;DLNA.ORG_OP=00;DLNA.ORG_FLAGS=01700000000000000000000000000000" size="4294967295" bitrate="176400" sampleFrequency="44100" bitsPerSample="16" nrAudioChannels="2"&gt;http://192.168.100.7:34717/AirMusic.WAV&lt;/res&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</CurrentURIMetaData>
+// </u:SetAVTransportURI></s:Body></s:Envelope>
   var didl = et.Element('DIDL-Lite');
   didl.set('xmlns', 'urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/');
-  didl.set('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
   didl.set('xmlns:upnp', 'urn:schemas-upnp-org:metadata-1-0/upnp/');
+  didl.set('xmlns:dc', 'http://purl.org/dc/elements/1.1/');
   didl.set('xmlns:sec', 'http://www.sec.co.kr/');
   didl.set('xmlns:dlna', 'urn:schemas-dlna-org:device-1-0');
 
+
   var item = et.SubElement(didl, 'item');
   item.set('id', 0);
-  item.set('parentID', -1);
+  item.set('parentID', 0);
   item.set('restricted', false);
 
   var OBJECT_CLASSES = {
@@ -279,14 +287,31 @@ function buildMetadata(metadata) {
     title.text = metadata.title;
   }
 
-  if(metadata.creator) {
+  if(metadata.type) {
     var creator = et.SubElement(item, 'dc:creator');
     creator.text = metadata.creator;
+  }
+
+  if(metadata.type == "audio") {
+    if (metadata.album){
+      var album = et.SubElement(item, 'upnp:album');
+      album.text = metadata.album;
+    }
+    if (metadata.artist){
+      var artist = et.SubElement(item, 'upnp:artist');
+      artist.set('role','Performer') ;
+      artist.text = metadata.artist;
+    }
   }
 
   if(metadata.url && metadata.protocolInfo) {
     var res = et.SubElement(item, 'res');
     res.set('protocolInfo', metadata.protocolInfo);
+    res.set('size','4294967295') ;
+    res.set('bitrate','176400') ;
+    res.set('sampleFrequency',"44100") ;
+    res.set('bitsPerSample',"16");
+    res.set('nrAudioChannels',"2");
     res.text = metadata.url;
   }
 
