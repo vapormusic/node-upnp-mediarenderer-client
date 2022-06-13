@@ -269,7 +269,7 @@ function buildMetadata(metadata) {
   var item = et.SubElement(didl, 'item');
   item.set('id', 0);
   item.set('parentID', 0);
-  item.set('restricted', false);
+  item.set('restricted', 1);
 
   var OBJECT_CLASSES = {
     'audio': 'object.item.audioItem.musicTrack',
